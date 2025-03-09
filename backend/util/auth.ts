@@ -8,3 +8,11 @@ export async function hashPassword(password: string): Promise<string> {
     .join("");
   return hashHex;
 }
+
+export async function verifyPassword(
+  providedPassword: string,
+  storedPasswordHash: string
+): Promise<boolean> {
+  const hashedPassword = await hashPassword(providedPassword);
+  return hashedPassword === storedPasswordHash;
+}

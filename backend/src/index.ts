@@ -1,10 +1,12 @@
 import { Hono } from "hono";
-import prismaClients from "../lib/prisma";
+import { sign } from "hono/jwt";
 import { logger } from "hono/logger";
-import { hashPassword } from "../util/hash-password";
+import prismaClients from "../lib/prisma";
+import { hashPassword, verifyPassword } from "../util/auth";
 
 type Bindings = {
   DB: D1Database;
+  SECRET_KEY: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -68,6 +70,39 @@ app.post("/signup", async (c) => {
     console.error(error);
     return c.json({ error: "Error creating user" }, 500);
   }
+});
+
+app.post("/login", async (c) => {
+  const { email, password } = await c.req.json();
+
+  if (!email || !password) {
+    return c.json({ error: "Email and Password are mandatory." }, 400);
+  }
+
+  const prisma = await prismaClients.fetch(c.env.DB);
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    return c.json({ error: "Invalid credentials" }, 400);
+  }
+
+  const isPasswordValid = await verifyPassword(password, user.password);
+
+  if (!isPasswordValid) {
+    return c.json({ error: "Invalid credentials" }, 400);
+  }
+
+  const payload = {
+    userId: user.id,
+    roleId: user.roleId,
+    exp: Math.floor(Date.now() / 1000) + 60 * 5, // Token expires in 5 minutes
+  };
+  const token = await sign(payload, c.env.SECRET_KEY);
+
+  return c.json({ message: "Login successful", token });
 });
 
 app.get("/", async (c) => {

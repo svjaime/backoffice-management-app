@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { JwtVariables, sign } from "hono/jwt";
 import prismaClient from "../db/prisma";
 import { hashPassword, verifyPassword } from "../utils/auth";
@@ -15,7 +16,9 @@ app.post("/signup", async (c) => {
   const { name, email, password } = await c.req.json();
 
   if (!name || !email || !password) {
-    return c.json({ error: "Name, Email and Password are mandatory." }, 400);
+    throw new HTTPException(400, {
+      message: "Name, Email and Password are mandatory.",
+    });
   }
 
   const prisma = await prismaClient.fetch(c.env.DB);
@@ -25,7 +28,7 @@ app.post("/signup", async (c) => {
   });
 
   if (existingUser) {
-    return c.json({ error: "User already exists" }, 400);
+    throw new HTTPException(400, { message: "User already exists" });
   }
 
   const defaultRole = await prisma.role.findUnique({
@@ -33,33 +36,30 @@ app.post("/signup", async (c) => {
   });
 
   if (!defaultRole) {
-    return c.json({ error: "Default user role not found" }, 500);
+    throw new HTTPException(500, { message: "Default user role not found" });
   }
 
   const hashedPassword = await hashPassword(password);
 
-  try {
-    const newUser = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        roleId: defaultRole.id,
-      },
-    });
+  const newUser = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      roleId: defaultRole.id,
+    },
+  });
 
-    return c.json({ message: "User created successfully", userId: newUser.id });
-  } catch (error) {
-    console.error(error);
-    return c.json({ error: "Error creating user" }, 500);
-  }
+  return c.json({ message: "User created successfully", userId: newUser.id });
 });
 
 app.post("/login", async (c) => {
   const { email, password } = await c.req.json();
 
   if (!email || !password) {
-    return c.json({ error: "Email and Password are mandatory." }, 400);
+    throw new HTTPException(400, {
+      message: "Email and Password are mandatory.",
+    });
   }
 
   const prisma = await prismaClient.fetch(c.env.DB);
@@ -69,13 +69,13 @@ app.post("/login", async (c) => {
   });
 
   if (!user) {
-    return c.json({ error: "Invalid credentials" }, 400);
+    throw new HTTPException(400, { message: "Invalid credentials" });
   }
 
   const isPasswordValid = await verifyPassword(password, user.password);
 
   if (!isPasswordValid) {
-    return c.json({ error: "Invalid credentials" }, 400);
+    throw new HTTPException(400, { message: "Invalid credentials" });
   }
 
   const payload = {

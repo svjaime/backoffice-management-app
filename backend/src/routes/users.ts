@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { every } from "hono/combine";
+import { HTTPException } from "hono/http-exception";
 import { JwtVariables } from "hono/jwt";
 import prismaClient from "../db/prisma";
 import { checkPermission } from "../middlewares/check-permission";
@@ -29,14 +30,16 @@ app.post("/", async (c) => {
   const { name, email, password, role } = await c.req.json();
 
   if (!name || !email || !password || !role) {
-    return c.json({ error: "All fields are required" }, 400);
+    throw new HTTPException(400, { message: "All fields are required" });
   }
 
   const prisma = await prismaClient.fetch(c.env.DB);
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    return c.json({ error: "User with this email already exists" }, 400);
+    throw new HTTPException(400, {
+      message: "User with this email already exists",
+    });
   }
 
   const roleRecord = await prisma.role.findUnique({
@@ -44,7 +47,7 @@ app.post("/", async (c) => {
   });
 
   if (!roleRecord) {
-    return c.json({ error: "Invalid role specified" }, 400);
+    throw new HTTPException(400, { message: "Invalid role specified" });
   }
 
   const newUser = await prisma.user.create({
@@ -70,7 +73,7 @@ app.put("/:id", async (c) => {
   });
 
   if (!user) {
-    return c.json({ error: "User not found" }, 404);
+    throw new HTTPException(404, { message: "User not found" });
   }
 
   let roleRecord;
@@ -81,7 +84,7 @@ app.put("/:id", async (c) => {
     });
 
     if (!roleRecord) {
-      return c.json({ error: "Invalid role specified" }, 400);
+      throw new HTTPException(400, { message: "Invalid role specified" });
     }
   }
 
@@ -113,7 +116,7 @@ app.delete("/:id", async (c) => {
   });
 
   if (!user) {
-    return c.json({ error: "User not found" }, 404);
+    throw new HTTPException(404, { message: "User not found" });
   }
 
   await prisma.user.delete({

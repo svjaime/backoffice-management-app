@@ -37,7 +37,7 @@ const verifyManageUsersPermission = createMiddleware(async (c, next) => {
 });
 
 app.post("/signup", async (c) => {
-  const { name, email, password, role } = await c.req.json();
+  const { name, email, password } = await c.req.json();
 
   if (!name || !email || !password) {
     return c.json({ error: "Name, Email and Password are mandatory." }, 400);
@@ -53,31 +53,15 @@ app.post("/signup", async (c) => {
     return c.json({ error: "User already exists" }, 400);
   }
 
-  const hashedPassword = await hashPassword(password);
+  const defaultRole = await prisma.role.findUnique({
+    where: { name: "user" },
+  });
 
-  let roleId;
-
-  if (role) {
-    const roleRecord = await prisma.role.findUnique({
-      where: { name: role },
-    });
-
-    if (!roleRecord) {
-      return c.json({ error: "Invalid role specified" }, 400);
-    }
-
-    roleId = roleRecord.id;
-  } else {
-    const defaultRole = await prisma.role.findUnique({
-      where: { name: "user" },
-    });
-
-    if (!defaultRole) {
-      return c.json({ error: "Default user role not found" }, 500);
-    }
-
-    roleId = defaultRole.id;
+  if (!defaultRole) {
+    return c.json({ error: "Default user role not found" }, 500);
   }
+
+  const hashedPassword = await hashPassword(password);
 
   try {
     const newUser = await prisma.user.create({
@@ -85,7 +69,7 @@ app.post("/signup", async (c) => {
         name,
         email,
         password: hashedPassword,
-        roleId,
+        roleId: defaultRole.id,
       },
     });
 

@@ -1,8 +1,10 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { JwtVariables, sign } from "hono/jwt";
 import prismaClient from "../db/prisma";
 import { hashPassword, verifyPassword } from "../utils/auth";
+import { loginSchema, signupSchema } from "../utils/schemas";
 
 type Bindings = {
   DB: D1Database;
@@ -12,14 +14,8 @@ type Variables = JwtVariables;
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-app.post("/signup", async (c) => {
-  const { name, email, password } = await c.req.json();
-
-  if (!name || !email || !password) {
-    throw new HTTPException(400, {
-      message: "Name, Email and Password are mandatory.",
-    });
-  }
+app.post("/signup", zValidator("json", signupSchema), async (c) => {
+  const { name, email, password } = c.req.valid("json");
 
   const prisma = await prismaClient.fetch(c.env.DB);
 
@@ -53,14 +49,8 @@ app.post("/signup", async (c) => {
   return c.json({ message: "User created successfully", userId: newUser.id });
 });
 
-app.post("/login", async (c) => {
-  const { email, password } = await c.req.json();
-
-  if (!email || !password) {
-    throw new HTTPException(400, {
-      message: "Email and Password are mandatory.",
-    });
-  }
+app.post("/login", zValidator("json", loginSchema), async (c) => {
+  const { email, password } = c.req.valid("json");
 
   const prisma = await prismaClient.fetch(c.env.DB);
 

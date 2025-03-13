@@ -3,6 +3,9 @@
     "title": "Hello world",
     "description": "Backoffice management app"
   },
+  "AdminPage": {
+    "title": "Hello world"
+  },
   "LoginForm": {
     "email": "Email",
     "emailDescription": "Your email.",
@@ -40,5 +43,9 @@
   },
   "AuthContext": {
     "somethingWentWrong": "Something went wrong..."
+  },
+  "Forbidden": {
+    "forbidden": "Forbidden",
+    "forbiddenBlurb": "You need admin rights to view this."
   }
 }

@@ -11,8 +11,9 @@ export const checkPermission = (permission: string) =>
       where: { name: payload.role },
       include: { permissions: true },
     });
+
     if (!role?.permissions.some(({ name }) => name === permission)) {
-      throw new HTTPException(403, { message: "Not enough permissions" });
+      throw new HTTPException(401, { message: "Not enough permissions" });
     }
     await next();
   });

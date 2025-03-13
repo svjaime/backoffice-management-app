@@ -37,7 +37,14 @@ app.post("/signup", zValidator("json", signupSchema), async (c) => {
     data: { name, email, password: hashedPassword, roleId: defaultRole.id },
   });
 
-  return c.json({ message: "User created successfully", userId: newUser.id });
+  const payload = {
+    userId: newUser.id,
+    role: defaultRole.name,
+    exp: Math.floor(Date.now() / 1000) + 60 * 5, // Token expires in 5 minutes
+  };
+  const token = await sign(payload, c.env.JWT_SECRET);
+
+  return c.json({ token });
 });
 
 app.post("/login", zValidator("json", loginSchema), async (c) => {

@@ -1,5 +1,13 @@
 {
   "HomePage": {
     "title": "Hello world!"
+  },
+  "LoginForm": {
+    "email": "Email",
+    "emailDescription": "Your email.",
+    "emailPlaceholder": "email@example.com",
+    "password": "Password",
+    "passwordDescription": "Your password.",
+    "submit": "Submit"
   }
 }

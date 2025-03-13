@@ -1,6 +1,6 @@
 import Navigation from "@/components/navigation";
 import Authentication from "@/components/authentication";
-import HomeButton from "./ui/home-button";
+import HomeButton from "@/components/ui/home-button";
 
 export default function Header() {
   return (

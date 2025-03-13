@@ -1,5 +1,8 @@
 "use client";
 
+import { jwtDecode } from "jwt-decode";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -7,8 +10,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { jwtDecode } from "jwt-decode";
-import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type JwtToken = { userId: number; role: string; exp: number };
 type User = { id: number; isAdmin: boolean };
@@ -28,6 +30,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const t = useTranslations("AuthContext");
   const [user, setUser] = useState<User>();
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -37,6 +40,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     email: string;
     password: string;
   }) => {
+    setIsLoading(true);
+
     const res = await fetch("http://localhost:8787/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -52,11 +57,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       router.refresh();
     } else {
-      throw new Error("Login failed");
+      toast(t("somethingWentWrong"));
     }
+    setIsLoading(false);
   };
 
   const login = async (credentials: { email: string; password: string }) => {
+    setIsLoading(true);
+
     const res = await fetch("http://localhost:8787/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -72,8 +80,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       router.refresh();
     } else {
-      throw new Error("Login failed");
+      toast(t("somethingWentWrong"));
     }
+    setIsLoading(false);
   };
 
   const logout = useCallback(() => {

@@ -1,6 +1,7 @@
 import Container from "@/components/container";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/context/auth-context";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
@@ -45,6 +46,7 @@ export default async function RootLayout({
             </Container>
           </AuthProvider>
         </NextIntlClientProvider>
+        <Toaster />
       </body>
     </html>
   );

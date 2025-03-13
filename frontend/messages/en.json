@@ -37,5 +37,8 @@
     "loginDescription": "Login to the app.",
     "signup": "Sign up",
     "signUpDescription": "create a user account."
+  },
+  "AuthContext": {
+    "somethingWentWrong": "Something went wrong..."
   }
 }

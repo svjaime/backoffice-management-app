@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/auth-context";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,7 +24,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
   const t = useTranslations("LoginForm");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -65,7 +66,10 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">{t("submit")}</Button>
+        <Button disabled={isLoading} type="submit">
+          {isLoading && <Loader className="animate-spin" />}
+          {t("submit")}
+        </Button>
       </form>
     </Form>
   );

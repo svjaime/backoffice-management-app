@@ -3,6 +3,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/context/auth-context";
+import QueryClientProvider from "@/providers/query-client-provider";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -39,11 +40,13 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
-            <Container className="flex min-h-svh flex-col py-4 sm:py-8">
-              <Header />
-              <main className="flex grow py-10">{children}</main>
-              <Footer />
-            </Container>
+            <QueryClientProvider>
+              <Container className="flex min-h-svh flex-col py-4 sm:py-8">
+                <Header />
+                <main className="flex grow py-10">{children}</main>
+                <Footer />
+              </Container>
+            </QueryClientProvider>
           </AuthProvider>
         </NextIntlClientProvider>
         <Toaster />

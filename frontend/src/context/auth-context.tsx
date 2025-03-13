@@ -13,7 +13,7 @@ import {
 import { toast } from "sonner";
 
 type JwtToken = { userId: number; role: string; exp: number };
-type User = { id: number; isAdmin: boolean };
+type User = { id: number; isAdmin: boolean; token: string };
 
 interface AuthContextType {
   user?: User;
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { token } = await res.json();
       const decoded = jwtDecode<JwtToken>(token);
 
-      setUser({ id: decoded.userId, isAdmin: decoded.role === "admin" });
+      setUser({ id: decoded.userId, isAdmin: decoded.role === "admin", token });
       localStorage.setItem("token", token);
 
       router.refresh();
@@ -75,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { token } = await res.json();
       const decoded = jwtDecode<JwtToken>(token);
 
-      setUser({ id: decoded.userId, isAdmin: decoded.role === "admin" });
+      setUser({ id: decoded.userId, isAdmin: decoded.role === "admin", token });
       localStorage.setItem("token", token);
 
       router.refresh();
@@ -102,7 +102,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (isTokenExpired) {
         logout();
       } else {
-        setUser({ id: decoded.userId, isAdmin: decoded.role == "admin" });
+        setUser({
+          id: decoded.userId,
+          isAdmin: decoded.role == "admin",
+          token: storedToken,
+        });
       }
     }
     setIsLoading(false);

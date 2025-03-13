@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/auth-context";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
@@ -9,13 +10,25 @@ const userSchema = z.object({
   role: z.object({ id: z.number(), name: z.string() }),
 });
 
-type User = z.infer<typeof userSchema>;
+export type User = z.infer<typeof userSchema>;
 
-export function useUsers(token = "") {
+export function useUsers() {
+  const { user, logout } = useAuth();
+  const token = user?.token ?? "";
+
   return useQuery<User[]>({
     queryKey: ["users", token],
-    queryFn: () => fetchUsers(token),
-    enabled: !!token,
+    queryFn: async () => {
+      try {
+        return await fetchUsers(token);
+      } catch (err) {
+        if (err instanceof Error && err.message === "Unauthorized") {
+          logout();
+        }
+        throw err;
+      }
+    },
+    enabled: !!token && user?.isAdmin,
   });
 }
 
@@ -27,6 +40,10 @@ const fetchUsers = async (token: string) => {
       ["Authorization", `Bearer ${token}`],
     ],
   });
+
+  if (res.status === 401) {
+    throw new Error("Unauthorized");
+  }
 
   if (!res.ok) {
     throw new Error("Failed to fetch users");

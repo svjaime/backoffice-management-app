@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       router.refresh();
     } else {
-      toast(t("somethingWentWrong"));
+      toast.error(t("somethingWentWrong"));
     }
     setIsLoading(false);
   };
@@ -80,16 +80,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       router.refresh();
     } else {
-      toast(t("somethingWentWrong"));
+      toast.error(t("somethingWentWrong"));
     }
     setIsLoading(false);
   };
 
-  const logout = useCallback(() => {
-    setUser(undefined);
-    localStorage.removeItem("token");
-    router.push("/");
-  }, [router]);
+  const logout = useCallback(
+    (message?: string) => {
+      setUser(undefined);
+      localStorage.removeItem("token");
+      router.push("/");
+      if (message) {
+        toast.info(message);
+      }
+    },
+    [router],
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -100,7 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const isTokenExpired = decoded.exp * 1000 <= Date.now();
 
       if (isTokenExpired) {
-        logout();
+        logout(t("sessionExpired"));
       } else {
         setUser({
           id: decoded.userId,
@@ -110,7 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
     setIsLoading(false);
-  }, [logout]);
+  }, [logout, t]);
 
   return (
     <AuthContext.Provider value={{ user, isLoading, signup, login, logout }}>

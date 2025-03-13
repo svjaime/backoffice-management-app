@@ -4,7 +4,7 @@
     "description": "Backoffice management app"
   },
   "AdminPage": {
-    "title": "Hello world"
+    "manageUsers": "Manage users"
   },
   "LoginForm": {
     "email": "Email",
@@ -42,10 +42,47 @@
     "signUpDescription": "create a user account."
   },
   "AuthContext": {
-    "somethingWentWrong": "Something went wrong..."
+    "somethingWentWrong": "Something went wrong...",
+    "sessionExpired": "Session expired. Please log in again."
   },
   "Forbidden": {
     "forbidden": "Forbidden",
     "forbiddenBlurb": "You need admin rights to view this."
+  },
+  "DataTable": {
+    "noResults": "No results.",
+    "loading": "Loading data..."
+  },
+  "DataTablePagination": {
+    "rowsSelected": "{rows} of {totalRows} row(s) selected.",
+    "rowsPerPage": "Rows per page",
+    "pageOf": "Page {page} of {totalPages}",
+    "goToFirstPage": "Go to first page",
+    "goToPreviousPage": "Go to previous page",
+    "goToNextPage": "Go to next page",
+    "goToLastPage": "Go to last page"
+  },
+  "DataTableColumnHeader": {
+    "asc": "Asc",
+    "desc": "Desc",
+    "hide": "Hide"
+  },
+  "DataTableViewOptions": {
+    "view": "View",
+    "toggleColumns": "Toggle columns"
+  },
+  "DataTableFacetedFilter": {
+    "selected": "{value} selected",
+    "noResultsFound": "No results found.",
+    "clearFilters": "Clear filters"
+  },
+  "UsersTable": {
+    "id": "ID",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "createdAt": "Created at",
+    "filterUsers": "Filter by name...",
+    "reset": "Reset"
   }
 }

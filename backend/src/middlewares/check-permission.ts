@@ -8,7 +8,7 @@ export const checkPermission = (permission: string) =>
 
     const prisma = await prismaClient.fetch(c.env.DB);
     const role = await prisma.role.findUnique({
-      where: { id: payload.roleId },
+      where: { name: payload.role },
       include: { permissions: true },
     });
     if (!role?.permissions.some(({ name }) => name === permission)) {

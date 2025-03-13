@@ -1,13 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
-export default function Home() {
+export default function HomePage() {
   const t = useTranslations("HomePage");
 
   return (
-    <main>
-      <h1>{t("title")}</h1>
-      <Button>Testing Shadcn</Button>
-    </main>
+    <div className="mt-10 flex w-full flex-col items-center gap-4">
+      <h1 className="text-3xl font-bold uppercase">{t("title")}</h1>
+      <p>{t("description")}</p>
+    </div>
   );
 }

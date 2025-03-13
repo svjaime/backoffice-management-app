@@ -1,3 +1,6 @@
+import Container from "@/components/container";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 import { AuthProvider } from "@/context/auth-context";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
@@ -34,7 +37,13 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider messages={messages}>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <Container className="flex min-h-svh flex-col py-4 sm:py-8">
+              <Header />
+              <main className="flex grow py-10">{children}</main>
+              <Footer />
+            </Container>
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 {
   "HomePage": {
-    "title": "Hello world!"
+    "title": "Hello world",
+    "description": "Backoffice management app"
   },
   "LoginForm": {
     "email": "Email",
@@ -9,5 +10,32 @@
     "password": "Password",
     "passwordDescription": "Your password.",
     "submit": "Submit"
+  },
+  "SignupForm": {
+    "name": "Name",
+    "nameDescription": "Your name.",
+    "namePlaceholder": "John Doe",
+    "email": "Email",
+    "emailDescription": "Your email.",
+    "emailPlaceholder": "email@example.com",
+    "password": "Password",
+    "passwordDescription": "Your password.",
+    "submit": "Submit"
+  },
+  "Navigation": {
+    "admin": "Admin",
+    "dashboard": "Dashboard",
+    "menu": "Menu",
+    "navigation": "Navigation"
+  },
+  "Footer": {
+    "madeBy": "Backoffice management app by Jaime"
+  },
+  "Authentication": {
+    "logout": "Logout",
+    "login": "Login",
+    "loginDescription": "Login to the app.",
+    "signup": "Sign up",
+    "signUpDescription": "create a user account."
   }
 }

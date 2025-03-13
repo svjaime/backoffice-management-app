@@ -16,6 +16,11 @@ type User = { id: number; isAdmin: boolean };
 interface AuthContextType {
   user?: User;
   isLoading: boolean;
+  signup: (credentials: {
+    name: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
   login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => void;
 }
@@ -26,6 +31,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>();
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
+  const signup = async (credentials: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
+    const res = await fetch("http://localhost:8787/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    });
+
+    if (res.ok) {
+      const { token } = await res.json();
+      const decoded = jwtDecode<JwtToken>(token);
+
+      setUser({ id: decoded.userId, isAdmin: decoded.role === "admin" });
+      localStorage.setItem("token", token);
+
+      router.refresh();
+    } else {
+      throw new Error("Login failed");
+    }
+  };
 
   const login = async (credentials: { email: string; password: string }) => {
     const res = await fetch("http://localhost:8787/api/auth/login", {
@@ -41,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser({ id: decoded.userId, isAdmin: decoded.role === "admin" });
       localStorage.setItem("token", token);
 
-      router.push("/dashboard");
+      router.refresh();
     } else {
       throw new Error("Login failed");
     }
@@ -71,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [logout]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, signup, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

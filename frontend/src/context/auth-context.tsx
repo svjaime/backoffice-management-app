@@ -2,6 +2,7 @@
 
 import { LoginInput } from "@/components/forms/login-form";
 import { SignupInput } from "@/components/forms/signup-form";
+import { config } from "@/config";
 import { jwtDecode } from "jwt-decode";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const t = useTranslations("AuthContext");
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signup = async (input: SignupInput) => {
     setIsLoading(true);
 
-    const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+    const res = await fetch(`${config.api.baseUrl}/api/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (input: LoginInput) => {
     setIsLoading(true);
 
-    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    const res = await fetch(`${config.api.baseUrl}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),

@@ -1,5 +1,6 @@
 import { CreateUserInput } from "@/components/forms/create-user-form";
 import { UpdateUserInput } from "@/components/forms/update-user-form";
+import { config } from "@/config";
 import { useAuth } from "@/context/auth-context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
@@ -13,8 +14,6 @@ const userSchema = z.object({
 });
 
 export type User = z.infer<typeof userSchema>;
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export function useGetUsers() {
   const { user, logout } = useAuth();
@@ -87,7 +86,7 @@ export function useUserActions() {
 }
 
 const fetchUsers = async (token: string) => {
-  const res = await fetch(`${API_BASE_URL}/api/users`, {
+  const res = await fetch(`${config.api.baseUrl}/api/users`, {
     method: "GET",
     headers: [
       ["Content-Type", "application/json"],
@@ -108,7 +107,7 @@ const fetchUsers = async (token: string) => {
 };
 
 const deleteUser = async (token: string, id: number) => {
-  const res = await fetch(`${API_BASE_URL}/api/users/${id}`, {
+  const res = await fetch(`${config.api.baseUrl}/api/users/${id}`, {
     method: "DELETE",
     headers: [
       ["Content-Type", "application/json"],
@@ -129,7 +128,7 @@ const updateUser = async (
   token: string,
   user: UpdateUserInput & { id: number },
 ) => {
-  const res = await fetch(`${API_BASE_URL}/api/users/${user.id}`, {
+  const res = await fetch(`${config.api.baseUrl}/api/users/${user.id}`, {
     method: "PUT",
     headers: [
       ["Content-Type", "application/json"],
@@ -148,7 +147,7 @@ const updateUser = async (
 };
 
 const createUser = async (token: string, user: CreateUserInput) => {
-  const res = await fetch(`${API_BASE_URL}/api/users`, {
+  const res = await fetch(`${config.api.baseUrl}/api/users`, {
     method: "POST",
     headers: [
       ["Content-Type", "application/json"],

@@ -6,6 +6,9 @@
   "AdminPage": {
     "manageUsers": "Manage users"
   },
+  "DashboardPage": {
+    "createTransaction": "Create transaction"
+  },
   "LoginForm": {
     "email": "Email",
     "emailDescription": "Your email.",
@@ -43,6 +46,24 @@
     "role": "Role",
     "user": "user",
     "admin": "admin",
+    "submit": "Submit"
+  },
+  "CreateTransactionForm": {
+    "type": "Type",
+    "subType": "Sub-type",
+    "amount": "Amount",
+    "status": "Status",
+    "description": "Description",
+    "descriptionPlaceholder": "Description...",
+    "userId": "User ID",
+    "deposit": "Deposit",
+    "credit": "Credit",
+    "reward": "Reward",
+    "purchase": "Purchase",
+    "refund": "Refund",
+    "pending": "Pending",
+    "failed": "Failed",
+    "completed": "Completed",
     "submit": "Submit"
   },
   "Navigation": {
@@ -113,6 +134,10 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "TransactionsHook": {
+    "createTransactionSuccess": "Transaction created successfuly",
+    "somethingWentWrong": "Something went wrong..."
   },
   "UsersHook": {
     "createUserSuccess": "User created successfuly",

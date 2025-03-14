@@ -27,12 +27,12 @@
       "database_name": "spinanda-db",
       "database_id": "7cce6899-48ff-4832-bc52-bab99d454c26"
     }
-  ]
+  ],
   // "ai": {
   //   "binding": "AI"
   // },
-  // "observability": {
-  //   "enabled": true,
-  //   "head_sampling_rate": 1
-  // }
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
 }

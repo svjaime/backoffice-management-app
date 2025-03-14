@@ -76,7 +76,7 @@ export function UpdateUserForm({ userId, defaults }: UpdateUserFormProps) {
             <FormItem>
               <FormLabel>{t("email")}</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

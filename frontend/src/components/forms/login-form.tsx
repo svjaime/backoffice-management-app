@@ -45,7 +45,11 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>{t("email")}</FormLabel>
               <FormControl>
-                <Input placeholder={t("emailPlaceholder")} {...field} />
+                <Input
+                  type="email"
+                  placeholder={t("emailPlaceholder")}
+                  {...field}
+                />
               </FormControl>
               <FormDescription>{t("emailDescription")}</FormDescription>
               <FormMessage />

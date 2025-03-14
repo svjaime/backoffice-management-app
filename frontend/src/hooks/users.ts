@@ -1,3 +1,4 @@
+import { CreateUserInput } from "@/components/forms/create-user-form";
 import { UpdateUserInput } from "@/components/forms/update-user-form";
 import { useAuth } from "@/context/auth-context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -66,7 +67,21 @@ export function useUserActions() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
   });
 
-  return { deleteUserMutation, updateUserMutation };
+  const createUserMutation = useMutation({
+    mutationFn: async (user: CreateUserInput) => {
+      try {
+        return await createUser(token, user);
+      } catch (err) {
+        if (err instanceof Error && err.message === "Unauthorized") {
+          logout();
+        }
+        throw err;
+      }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+  });
+
+  return { deleteUserMutation, updateUserMutation, createUserMutation };
 }
 
 const fetchUsers = async (token: string) => {
@@ -127,5 +142,24 @@ const updateUser = async (
 
   if (!res.ok) {
     throw new Error("Failed to update user");
+  }
+};
+
+const createUser = async (token: string, user: CreateUserInput) => {
+  const res = await fetch("http://localhost:8787/api/users", {
+    method: "POST",
+    headers: [
+      ["Content-Type", "application/json"],
+      ["Authorization", `Bearer ${token}`],
+    ],
+    body: JSON.stringify(user),
+  });
+
+  if (res.status === 401) {
+    throw new Error("Unauthorized");
+  }
+
+  if (!res.ok) {
+    throw new Error("Failed to create user");
   }
 };

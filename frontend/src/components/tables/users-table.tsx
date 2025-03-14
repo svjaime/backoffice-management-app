@@ -1,5 +1,6 @@
 "use client";
 
+import { CreateUserForm } from "@/components/forms/create-user-form";
 import { UpdateUserForm } from "@/components/forms/update-user-form";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
@@ -36,7 +37,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Edit, Trash2, X } from "lucide-react";
+import { Edit, Trash2, UserPlus, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 
@@ -95,6 +96,22 @@ export default function UsersTable({ users = [], isLoading }: UsersTableProps) {
       },
       {
         id: "actions",
+        header: () => (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant={"link"}>
+                {t("createNewUser")}
+                <UserPlus />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{t("createNewUser")}</DialogTitle>
+              </DialogHeader>
+              <CreateUserForm />
+            </DialogContent>
+          </Dialog>
+        ),
         cell: ({ row }) => {
           const user = row.original;
 

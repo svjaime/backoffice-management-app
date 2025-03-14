@@ -33,6 +33,18 @@
     "admin": "admin",
     "submit": "Submit"
   },
+  "CreateUserForm": {
+    "name": "Name",
+    "namePlaceholder": "User name",
+    "email": "Email",
+    "emailPlaceholder": "User email",
+    "password": "Password",
+    "passwordPlaceholder": "User password",
+    "role": "Role",
+    "user": "user",
+    "admin": "admin",
+    "submit": "Submit"
+  },
   "Navigation": {
     "admin": "Admin",
     "dashboard": "Dashboard",
@@ -93,6 +105,7 @@
     "filterUsers": "Filter by name...",
     "reset": "Reset",
     "editUser": "Edit user",
-    "deleteUser": "Delete user"
+    "deleteUser": "Delete user",
+    "createNewUser": "Create new user"
   }
 }

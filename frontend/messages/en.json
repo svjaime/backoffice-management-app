@@ -25,6 +25,14 @@
     "passwordDescription": "Your password.",
     "submit": "Submit"
   },
+  "UpdateUserForm": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "user": "user",
+    "admin": "admin",
+    "submit": "Submit"
+  },
   "Navigation": {
     "admin": "Admin",
     "dashboard": "Dashboard",
@@ -83,6 +91,8 @@
     "role": "Role",
     "createdAt": "Created at",
     "filterUsers": "Filter by name...",
-    "reset": "Reset"
+    "reset": "Reset",
+    "editUser": "Edit user",
+    "deleteUser": "Delete user"
   }
 }

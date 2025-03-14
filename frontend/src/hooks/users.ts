@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/auth-context";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 const userSchema = z.object({
@@ -7,12 +7,12 @@ const userSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   createdAt: z.string().datetime(),
-  role: z.object({ id: z.number(), name: z.string() }),
+  role: z.object({ id: z.number(), name: z.enum(["admin", "user"]) }),
 });
 
 export type User = z.infer<typeof userSchema>;
 
-export function useUsers() {
+export function useGetUsers() {
   const { user, logout } = useAuth();
   const token = user?.token ?? "";
 
@@ -30,6 +30,47 @@ export function useUsers() {
     },
     enabled: !!token && user?.isAdmin,
   });
+}
+
+export function useUserActions() {
+  const queryClient = useQueryClient();
+  const { user, logout } = useAuth();
+  const token = user?.token ?? "";
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (id: number) => {
+      try {
+        return await deleteUser(token, id);
+      } catch (err) {
+        if (err instanceof Error && err.message === "Unauthorized") {
+          logout();
+        }
+        throw err;
+      }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+  });
+
+  const updateUserMutation = useMutation({
+    mutationFn: async (user: {
+      id: number;
+      name?: string;
+      email?: string;
+      role?: string;
+    }) => {
+      try {
+        return await updateUser(token, user);
+      } catch (err) {
+        if (err instanceof Error && err.message === "Unauthorized") {
+          logout();
+        }
+        throw err;
+      }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+  });
+
+  return { deleteUserMutation, updateUserMutation };
 }
 
 const fetchUsers = async (token: string) => {
@@ -51,4 +92,44 @@ const fetchUsers = async (token: string) => {
   const data = await res.json();
 
   return z.array(userSchema).parse(data);
+};
+
+const deleteUser = async (token: string, id: number) => {
+  const res = await fetch(`http://localhost:8787/api/users/${id}`, {
+    method: "DELETE",
+    headers: [
+      ["Content-Type", "application/json"],
+      ["Authorization", `Bearer ${token}`],
+    ],
+  });
+
+  if (res.status === 401) {
+    throw new Error("Unauthorized");
+  }
+
+  if (!res.ok) {
+    throw new Error("Failed to delete user");
+  }
+};
+
+const updateUser = async (
+  token: string,
+  user: { id: number; name?: string; email?: string; role?: string },
+) => {
+  const res = await fetch(`http://localhost:8787/api/users/${user.id}`, {
+    method: "PUT",
+    headers: [
+      ["Content-Type", "application/json"],
+      ["Authorization", `Bearer ${token}`],
+    ],
+    body: JSON.stringify(user),
+  });
+
+  if (res.status === 401) {
+    throw new Error("Unauthorized");
+  }
+
+  if (!res.ok) {
+    throw new Error("Failed to update user");
+  }
 };

@@ -1,13 +1,27 @@
 "use client";
 
+import { UpdateUserForm } from "@/components/forms/update-user-form";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { DataTableFacetedFilter } from "@/components/ui/data-table-faceted-filter";
 import { DataTablePagination } from "@/components/ui/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { User } from "@/hooks/users";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { User, useUserActions } from "@/hooks/users";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -22,7 +36,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { X } from "lucide-react";
+import { Edit, Trash2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 
@@ -33,6 +47,7 @@ interface UsersTableProps {
 
 export default function UsersTable({ users = [], isLoading }: UsersTableProps) {
   const t = useTranslations("UsersTable");
+  const { deleteUserMutation } = useUserActions();
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -78,8 +93,66 @@ export default function UsersTable({ users = [], isLoading }: UsersTableProps) {
           return format(date, "Pp");
         },
       },
+      {
+        id: "actions",
+        cell: ({ row }) => {
+          const user = row.original;
+
+          return (
+            <div className="flex gap-2">
+              <Dialog>
+                <TooltipProvider>
+                  <Tooltip>
+                    <DialogTrigger asChild>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          aria-label={t("editUser")}
+                        >
+                          <Edit />
+                        </Button>
+                      </TooltipTrigger>
+                    </DialogTrigger>
+                    <TooltipContent>{t("editUser")}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{t("editUser")}</DialogTitle>
+                  </DialogHeader>
+                  <UpdateUserForm
+                    userId={user.id}
+                    defaults={{
+                      name: user.name,
+                      email: user.email,
+                      role: user.role.name,
+                    }}
+                  />
+                </DialogContent>
+              </Dialog>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      aria-label={t("deleteUser")}
+                      disabled={deleteUserMutation.isPending}
+                      onClick={() => deleteUserMutation.mutate(user.id)}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t("deleteUser")}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          );
+        },
+      },
     ],
-    [t],
+    [deleteUserMutation, t],
   );
 
   const table = useReactTable({

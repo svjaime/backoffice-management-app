@@ -1,5 +1,7 @@
 "use client";
 
+import { LoginInput } from "@/components/forms/login-form";
+import { SignupInput } from "@/components/forms/signup-form";
 import { jwtDecode } from "jwt-decode";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -18,12 +20,8 @@ type User = { id: number; isAdmin: boolean; token: string };
 interface AuthContextType {
   user?: User;
   isLoading: boolean;
-  signup: (credentials: {
-    name: string;
-    email: string;
-    password: string;
-  }) => Promise<void>;
-  login: (credentials: { email: string; password: string }) => Promise<void>;
+  signup: (input: SignupInput) => Promise<void>;
+  login: (input: LoginInput) => Promise<void>;
   logout: () => void;
 }
 
@@ -35,17 +33,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  const signup = async (credentials: {
-    name: string;
-    email: string;
-    password: string;
-  }) => {
+  const signup = async (input: SignupInput) => {
     setIsLoading(true);
 
     const res = await fetch("http://localhost:8787/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify(input),
     });
 
     if (res.ok) {
@@ -62,13 +56,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   };
 
-  const login = async (credentials: { email: string; password: string }) => {
+  const login = async (input: LoginInput) => {
     setIsLoading(true);
 
     const res = await fetch("http://localhost:8787/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify(input),
     });
 
     if (res.ok) {

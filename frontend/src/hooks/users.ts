@@ -1,3 +1,4 @@
+import { UpdateUserInput } from "@/components/forms/update-user-form";
 import { useAuth } from "@/context/auth-context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
@@ -52,12 +53,7 @@ export function useUserActions() {
   });
 
   const updateUserMutation = useMutation({
-    mutationFn: async (user: {
-      id: number;
-      name?: string;
-      email?: string;
-      role?: string;
-    }) => {
+    mutationFn: async (user: UpdateUserInput & { id: number }) => {
       try {
         return await updateUser(token, user);
       } catch (err) {
@@ -114,7 +110,7 @@ const deleteUser = async (token: string, id: number) => {
 
 const updateUser = async (
   token: string,
-  user: { id: number; name?: string; email?: string; role?: string },
+  user: UpdateUserInput & { id: number },
 ) => {
   const res = await fetch(`http://localhost:8787/api/users/${user.id}`, {
     method: "PUT",

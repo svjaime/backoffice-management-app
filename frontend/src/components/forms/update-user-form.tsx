@@ -30,16 +30,18 @@ const formSchema = z.object({
   role: z.enum(["admin", "user"]).optional(),
 });
 
+export type UpdateUserInput = z.infer<typeof formSchema>;
+
 interface UpdateUserFormProps {
   userId: number;
-  defaults?: z.infer<typeof formSchema>;
+  defaults?: UpdateUserInput;
 }
 
 export function UpdateUserForm({ userId, defaults }: UpdateUserFormProps) {
   const { updateUserMutation } = useUserActions();
   const t = useTranslations("UpdateUserForm");
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<UpdateUserInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: defaults?.name ?? "",
@@ -103,7 +105,6 @@ export function UpdateUserForm({ userId, defaults }: UpdateUserFormProps) {
             </FormItem>
           )}
         />
-
         <Button
           disabled={updateUserMutation.isPending || !form.formState.isDirty}
           type="submit"

@@ -24,11 +24,13 @@ const formSchema = z.object({
   password: z.string().trim().min(1),
 });
 
+export type SignupInput = z.infer<typeof formSchema>;
+
 export function SignupForm() {
   const { signup, isLoading } = useAuth();
   const t = useTranslations("SignupForm");
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<SignupInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",

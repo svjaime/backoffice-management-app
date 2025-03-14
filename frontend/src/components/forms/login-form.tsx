@@ -23,11 +23,13 @@ const formSchema = z.object({
   password: z.string().trim().min(1),
 });
 
+export type LoginInput = z.infer<typeof formSchema>;
+
 export function LoginForm() {
   const { login, isLoading } = useAuth();
   const t = useTranslations("LoginForm");
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<LoginInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",

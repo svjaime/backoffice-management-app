@@ -55,6 +55,7 @@ const transactionAmountSchema = z
   .positive()
   .finite()
   .openapi({ example: 4.2 });
+
 const transactionStatusSchema = z
   .enum(["pending", "failed", "completed"])
   .openapi({ examples: ["pending", "failed", "completed"] });
@@ -110,6 +111,5 @@ export const transactionResponseSchema = z.object({
   status: transactionStatusSchema,
   description: transactionDescriptionSchema,
   userId: userIdSchema,
-  user: userResponseSchema,
   createdAt: createdAtSchema,
 });

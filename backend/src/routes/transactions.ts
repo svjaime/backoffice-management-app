@@ -52,7 +52,6 @@ app.get(
     const prisma = await prismaClient.fetch(c.env.DB);
     const transactions = await prisma.transaction.findMany({
       where: { userId },
-      include: { user: { include: { role: true } } },
     });
 
     return c.json(z.array(transactionResponseSchema).parse(transactions));
@@ -89,10 +88,7 @@ app.post(
       });
     }
 
-    const newTransaction = await prisma.transaction.create({
-      data: inputData,
-      include: { user: { include: { role: true } } }, // TODO prisma:warn Cloudflare D1 does not support transactions yet...
-    });
+    const newTransaction = await prisma.transaction.create({ data: inputData });
 
     return c.json(transactionResponseSchema.parse(newTransaction));
   }

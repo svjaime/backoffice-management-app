@@ -107,5 +107,11 @@
     "editUser": "Edit user",
     "deleteUser": "Delete user",
     "createNewUser": "Create new user"
+  },
+  "ThemeController": {
+    "toggleTheme": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }

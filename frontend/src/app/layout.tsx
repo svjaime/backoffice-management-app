@@ -4,6 +4,7 @@ import Header from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/context/auth-context";
 import QueryClientProvider from "@/providers/query-client-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -34,18 +35,25 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <QueryClientProvider>
-              <Container className="flex min-h-svh flex-col py-4 sm:py-8">
-                <Header />
-                <main className="flex grow py-10">{children}</main>
-                <Footer />
-              </Container>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Container className="flex min-h-svh flex-col py-4 sm:py-8">
+                  <Header />
+                  <main className="flex grow py-10">{children}</main>
+                  <Footer />
+                </Container>
+              </ThemeProvider>
             </QueryClientProvider>
           </AuthProvider>
         </NextIntlClientProvider>

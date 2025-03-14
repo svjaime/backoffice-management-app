@@ -14,6 +14,8 @@ const userSchema = z.object({
 
 export type User = z.infer<typeof userSchema>;
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export function useGetUsers() {
   const { user, logout } = useAuth();
   const token = user?.token ?? "";
@@ -85,7 +87,7 @@ export function useUserActions() {
 }
 
 const fetchUsers = async (token: string) => {
-  const res = await fetch("http://localhost:8787/api/users", {
+  const res = await fetch(`${API_BASE_URL}/api/users`, {
     method: "GET",
     headers: [
       ["Content-Type", "application/json"],
@@ -106,7 +108,7 @@ const fetchUsers = async (token: string) => {
 };
 
 const deleteUser = async (token: string, id: number) => {
-  const res = await fetch(`http://localhost:8787/api/users/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/users/${id}`, {
     method: "DELETE",
     headers: [
       ["Content-Type", "application/json"],
@@ -127,7 +129,7 @@ const updateUser = async (
   token: string,
   user: UpdateUserInput & { id: number },
 ) => {
-  const res = await fetch(`http://localhost:8787/api/users/${user.id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/users/${user.id}`, {
     method: "PUT",
     headers: [
       ["Content-Type", "application/json"],
@@ -146,7 +148,7 @@ const updateUser = async (
 };
 
 const createUser = async (token: string, user: CreateUserInput) => {
-  const res = await fetch("http://localhost:8787/api/users", {
+  const res = await fetch(`${API_BASE_URL}/api/users`, {
     method: "POST",
     headers: [
       ["Content-Type", "application/json"],

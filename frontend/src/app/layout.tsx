@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/context/auth-context";
 import QueryClientProvider from "@/providers/query-client-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -52,6 +53,7 @@ export default async function RootLayout({
                   <Header />
                   <main className="flex grow py-10">{children}</main>
                   <Footer />
+                  <Analytics />
                 </Container>
               </ThemeProvider>
             </QueryClientProvider>

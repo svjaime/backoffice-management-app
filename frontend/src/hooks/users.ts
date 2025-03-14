@@ -3,9 +3,11 @@ import { UpdateUserInput } from "@/components/forms/update-user-form";
 import { config } from "@/config";
 import { useAuth } from "@/context/auth-context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { z } from "zod";
 
-const userSchema = z.object({
+export const userSchema = z.object({
   id: z.number(),
   name: z.string(),
   email: z.string().email(),
@@ -20,7 +22,7 @@ export function useGetUsers() {
   const token = user?.token ?? "";
 
   return useQuery<User[]>({
-    queryKey: ["users", token],
+    queryKey: ["users"],
     queryFn: async () => {
       try {
         return await fetchUsers(token);
@@ -37,6 +39,7 @@ export function useGetUsers() {
 
 export function useUserActions() {
   const queryClient = useQueryClient();
+  const t = useTranslations("UsersHook");
   const { user, logout } = useAuth();
   const token = user?.token ?? "";
 
@@ -51,7 +54,13 @@ export function useUserActions() {
         throw err;
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast(t("deleteUserSuccess"));
+    },
+    onError: () => {
+      toast(t("somethingWentWrong"));
+    },
   });
 
   const updateUserMutation = useMutation({
@@ -65,7 +74,13 @@ export function useUserActions() {
         throw err;
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast(t("updateUserSuccess"));
+    },
+    onError: () => {
+      toast(t("somethingWentWrong"));
+    },
   });
 
   const createUserMutation = useMutation({
@@ -79,7 +94,13 @@ export function useUserActions() {
         throw err;
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast(t("createUserSuccess"));
+    },
+    onError: () => {
+      toast(t("somethingWentWrong"));
+    },
   });
 
   return { deleteUserMutation, updateUserMutation, createUserMutation };

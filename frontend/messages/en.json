@@ -113,5 +113,11 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "UsersHook": {
+    "createUserSuccess": "User created successfuly",
+    "deleteUserSuccess": "User deleted successfuly",
+    "updateUserSuccess": "User updated successfuly",
+    "somethingWentWrong": "Something went wrong..."
   }
 }

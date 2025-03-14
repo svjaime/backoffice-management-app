@@ -65,7 +65,7 @@ app.post(
     };
     const token = await sign(payload, c.env.JWT_SECRET);
 
-    return c.json({ token });
+    return c.json(tokenResponseSchema.parse({ token }));
   }
 );
 
@@ -113,7 +113,7 @@ app.post(
     };
     const token = await sign(payload, c.env.JWT_SECRET);
 
-    return c.json({ token });
+    return c.json(tokenResponseSchema.parse({ token }));
   }
 );
 

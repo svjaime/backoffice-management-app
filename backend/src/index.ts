@@ -5,6 +5,7 @@ import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import auth from "./routes/auth";
+import transactions from "./routes/transactions";
 import users from "./routes/users";
 
 const app = new Hono();
@@ -52,6 +53,7 @@ app.get(
 
 app.route("/api/auth", auth);
 app.route("/api/users", users);
+app.route("/api/transactions", transactions);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

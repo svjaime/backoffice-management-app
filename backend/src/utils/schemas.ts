@@ -62,6 +62,19 @@ const transactionStatusSchema = z
 
 const transactionDescriptionSchema = z.string().trim().max(50).optional();
 
+export const getTransactionsQueryParams = z.object({
+  userId: userIdSchema,
+  search: z.string(),
+  type: transactionTypeSchema.or(z.literal("")),
+  status: transactionStatusSchema.or(z.literal("")),
+  page: z.coerce.number().int().positive().finite().default(1),
+  limit: z.coerce.number().int().positive().finite().default(10),
+  sortField: z
+    .enum(["id", "type", "subType", "amount", "status", "createdAt"])
+    .default("createdAt"),
+  sortOrder: z.enum(["asc", "desc"]).default("desc"),
+});
+
 // Input schemas
 
 export const signupInputSchema = z.object({

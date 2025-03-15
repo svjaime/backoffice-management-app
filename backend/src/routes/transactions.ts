@@ -9,9 +9,9 @@ import prismaClient from "../db/prisma";
 import { checkPermission } from "../middlewares/check-permission";
 import { jwtMiddleware } from "../middlewares/jwt";
 import {
+  getTransactionsQueryParams,
   transactionInputSchema,
   transactionResponseSchema,
-  userIdSchema,
 } from "../utils/schemas";
 
 type Bindings = {
@@ -33,28 +33,47 @@ app.get(
         description: "Successful response",
         content: {
           "text/plain": {
-            schema: resolver(z.array(transactionResponseSchema)),
+            schema: resolver(
+              z.object({
+                transactions: transactionResponseSchema,
+                total: z.number().int().nonnegative(),
+              })
+            ),
           },
         },
       },
     },
   }),
   checkPermission("view_transactions"),
-  zValidator("query", z.object({ userId: userIdSchema })),
+  zValidator("query", getTransactionsQueryParams),
   async (c) => {
-    const { userId } = c.req.valid("query");
+    const { userId, search, type, status, page, limit, sortField, sortOrder } =
+      c.req.valid("query");
 
     const payload = c.get("jwtPayload");
     if (payload.userId != userId) {
       throw new HTTPException(401, { message: "Unauthorized" });
     }
 
+    const filters = {
+      ...(type && { type }),
+      ...(status && { status }),
+      ...(search && { description: { contains: search } }),
+    };
+
     const prisma = await prismaClient.fetch(c.env.DB);
     const transactions = await prisma.transaction.findMany({
-      where: { userId },
+      where: filters,
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: { [sortField]: sortOrder },
     });
+    const total = await prisma.transaction.count({ where: filters });
 
-    return c.json(z.array(transactionResponseSchema).parse(transactions));
+    return c.json({
+      transactions: z.array(transactionResponseSchema).parse(transactions),
+      total,
+    });
   }
 );
 

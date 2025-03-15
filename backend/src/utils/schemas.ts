@@ -64,9 +64,9 @@ const transactionDescriptionSchema = z.string().trim().max(50).optional();
 
 export const getTransactionsQueryParams = z.object({
   userId: userIdSchema,
-  search: z.string(),
-  type: transactionTypeSchema.or(z.literal("")),
-  status: transactionStatusSchema.or(z.literal("")),
+  search: z.string().default(""),
+  type: transactionTypeSchema.or(z.literal("")).default(""),
+  status: transactionStatusSchema.or(z.literal("").default("")),
   page: z.coerce.number().int().positive().finite().default(1),
   limit: z.coerce.number().int().positive().finite().default(10),
   sortField: z

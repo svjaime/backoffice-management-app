@@ -1,4 +1,7 @@
-import { Badge } from "@/components/ui/badge";
+import TransactionSubTypeBadge from "@/components/badges/transaction-subtype";
+import TransactionTypeBadge from "@/components/badges/transaction-type";
+import CurrencyLabel from "@/components/labels/currency";
+import TransactionStatusLabel from "@/components/labels/transaction-status";
 import { Transaction } from "@/hooks/transactions";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
@@ -24,29 +27,21 @@ export default function TransactionDetails({
         </div>
         <div className="flex gap-2">
           <span className="opacity-65">{t("type")}:</span>
-          <Badge variant="secondary">{transaction.type}</Badge>
+          <TransactionTypeBadge type={transaction.type} />
         </div>
         <div className="flex gap-2">
           <span className="opacity-65">{t("subType")}:</span>
-          <Badge variant="outline">{transaction.subType}</Badge>
+          <TransactionSubTypeBadge subType={transaction.subType} />
         </div>
         <div>
           <span className="opacity-65">{t("amount")}:</span>
-          <div className="font-medium">{transaction.amount}</div>
+          <div className="font-medium">
+            <CurrencyLabel value={transaction.amount} />
+          </div>
         </div>
-        <div className="flex items-start gap-2">
+        <div>
           <span className="opacity-65">{t("status")}:</span>
-          <Badge
-            variant={
-              transaction.status === "failed"
-                ? "destructive"
-                : transaction.status === "pending"
-                  ? "secondary"
-                  : "default"
-            }
-          >
-            {transaction.status}
-          </Badge>
+          <TransactionStatusLabel status={transaction.status} />
         </div>
         <div className="col-span-2">
           <span className="opacity-65">{t("createdAt")}:</span>

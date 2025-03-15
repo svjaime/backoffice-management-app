@@ -147,7 +147,7 @@
     "transactionDetails": "Transaction details"
   },
   "TransactionDetails": {
-    "id": "ID",
+    "id": "Transaction ID",
     "userId": "User ID",
     "type": "Type",
     "subType": "Sub-type",
@@ -171,5 +171,23 @@
     "deleteUserSuccess": "User deleted successfuly",
     "updateUserSuccess": "User updated successfuly",
     "somethingWentWrong": "Something went wrong..."
+  },
+  "TransactionStatusLabel": {
+    "completed": "Completed",
+    "pending": "Pending",
+    "failed": "Failed"
+  },
+  "TransactionTypeBadge": {
+    "deposit": "Deposit",
+    "credit": "Credit"
+  },
+  "TransactionSubTypeBadge": {
+    "reward": "Reward",
+    "purchase": "Purchase",
+    "refund": "Refund"
+  },
+  "UserRoleBadge": {
+    "admin": "Admin",
+    "user": "User"
   }
 }

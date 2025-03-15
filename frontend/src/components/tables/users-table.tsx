@@ -1,5 +1,6 @@
 "use client";
 
+import UserRoleBadge from "@/components/badges/user-role";
 import { CreateUserForm } from "@/components/forms/create-user-form";
 import { UpdateUserForm } from "@/components/forms/update-user-form";
 import { Button } from "@/components/ui/button";
@@ -83,6 +84,7 @@ export default function UsersTable({ users = [], isLoading }: UsersTableProps) {
         filterFn: (row, id, value) => {
           return value.includes(row.getValue(id));
         },
+        cell: ({ row }) => <UserRoleBadge role={row.original.role.name} />,
       },
       {
         accessorKey: "createdAt",

@@ -1,5 +1,9 @@
 "use client";
 
+import TransactionSubTypeBadge from "@/components/badges/transaction-subtype";
+import TransactionTypeBadge from "@/components/badges/transaction-type";
+import CurrencyLabel from "@/components/labels/currency";
+import TransactionStatusLabel from "@/components/labels/transaction-status";
 import TransactionDetails from "@/components/transaction-details";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
@@ -63,11 +67,15 @@ export default function TransactionsTable() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title={t("type")} />
         ),
+        cell: ({ row }) => <TransactionTypeBadge type={row.original.type} />,
       },
       {
         accessorKey: "subType",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title={t("subType")} />
+        ),
+        cell: ({ row }) => (
+          <TransactionSubTypeBadge subType={row.original.subType} />
         ),
       },
       {
@@ -75,11 +83,15 @@ export default function TransactionsTable() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title={t("amount")} />
         ),
+        cell: ({ row }) => <CurrencyLabel value={row.original.amount} />,
       },
       {
         accessorKey: "status",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title={t("status")} />
+        ),
+        cell: ({ row }) => (
+          <TransactionStatusLabel status={row.original.status} />
         ),
       },
       {

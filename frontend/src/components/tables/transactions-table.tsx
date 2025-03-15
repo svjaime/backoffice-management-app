@@ -1,9 +1,18 @@
 "use client";
 
+import TransactionDetails from "@/components/transaction-details";
+import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { DataTablePagination } from "@/components/ui/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -12,6 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAuth } from "@/context/auth-context";
 import { Transaction, useGetTransactions } from "@/hooks/transactions";
 import {
@@ -22,6 +37,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { Info } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 
@@ -74,6 +90,41 @@ export default function TransactionsTable() {
         cell: ({ row }) => {
           const date = new Date(row.original.createdAt);
           return format(date, "Pp");
+        },
+      },
+      {
+        id: "actions",
+        cell: ({ row }) => {
+          const transaction = row.original;
+
+          return (
+            <div className="flex gap-2">
+              <Dialog>
+                <TooltipProvider>
+                  <Tooltip>
+                    <DialogTrigger asChild>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          aria-label={t("transactionDetails")}
+                        >
+                          <Info />
+                        </Button>
+                      </TooltipTrigger>
+                    </DialogTrigger>
+                    <TooltipContent>{t("transactionDetails")}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{t("transactionDetails")}</DialogTitle>
+                  </DialogHeader>
+                  <TransactionDetails transaction={transaction} />
+                </DialogContent>
+              </Dialog>
+            </div>
+          );
         },
       },
     ],

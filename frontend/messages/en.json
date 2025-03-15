@@ -129,6 +129,22 @@
     "deleteUser": "Delete user",
     "createNewUser": "Create new user"
   },
+  "TransactionsTable": {
+    "id": "ID",
+    "type": "Type",
+    "subType": "Sub-type",
+    "status": "Status",
+    "amount": "Amount",
+    "createdAt": "Created at",
+    "reset": "Reset",
+    "searchDescription": "Search description...",
+    "all": "All",
+    "deposit": "Deposit",
+    "credit": "Credit",
+    "pending": "Pending",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
   "ThemeController": {
     "toggleTheme": "Toggle theme",
     "light": "Light",

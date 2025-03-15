@@ -1,11 +1,15 @@
 import { CreateTransactionInput } from "@/components/forms/create-transaction-form";
 import { config } from "@/config";
 import { useAuth } from "@/context/auth-context";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { z } from "zod";
-import { userSchema } from "./users";
 
 export const transactionSchema = z.object({
   id: z.number(),
@@ -14,21 +18,30 @@ export const transactionSchema = z.object({
   amount: z.number(),
   status: z.enum(["pending", "failed", "completed"]),
   description: z.string().optional(),
-  user: userSchema,
+  userId: z.number(),
   createdAt: z.string().datetime(),
 });
 
 export type Transaction = z.infer<typeof transactionSchema>;
+export type TransactionsSortKey = keyof Transaction;
 
-export function useGetTransactions() {
+type GetTransactionsParams = {
+  userId: number;
+  pageIndex: number;
+  pageSize: number;
+  filters: Record<string, string>;
+  sorting: { id: string; desc: boolean }[];
+};
+
+export function useGetTransactions(queryParams: GetTransactionsParams) {
   const { user, logout } = useAuth();
   const token = user?.token ?? "";
 
-  return useQuery<Transaction[]>({
-    queryKey: ["transactions", user?.id],
+  return useQuery<{ transactions: Transaction[]; total: number }>({
+    queryKey: ["transactions", queryParams],
     queryFn: async () => {
       try {
-        return await fetchTransactions(token, user?.id ?? 0);
+        return await fetchTransactions(token, queryParams);
       } catch (err) {
         if (err instanceof Error && err.message === "Unauthorized") {
           logout();
@@ -36,7 +49,8 @@ export function useGetTransactions() {
         throw err;
       }
     },
-    enabled: !!token && !!user?.id,
+    placeholderData: keepPreviousData,
+    enabled: !!token,
   });
 }
 
@@ -69,8 +83,19 @@ export function useTransactionActions() {
   return { createTransactionMutation };
 }
 
-const fetchTransactions = async (token: string, userId: number) => {
-  const params = new URLSearchParams({ userId: String(userId) }).toString();
+const fetchTransactions = async (
+  token: string,
+  { userId, pageIndex, pageSize, filters, sorting }: GetTransactionsParams,
+) => {
+  const params = new URLSearchParams({
+    userId: String(userId),
+    page: String(pageIndex + 1),
+    limit: String(pageSize),
+    ...filters,
+    sortField: sorting[0]?.id || "createdAt",
+    sortOrder: sorting[0]?.desc ? "desc" : "asc",
+  }).toString();
+
   const res = await fetch(`${config.api.baseUrl}/api/transactions?${params}`, {
     method: "GET",
     headers: [
@@ -88,7 +113,9 @@ const fetchTransactions = async (token: string, userId: number) => {
   }
   const data = await res.json();
 
-  return z.array(transactionSchema).parse(data);
+  return z
+    .object({ transactions: z.array(transactionSchema), total: z.number() })
+    .parse(data);
 };
 
 const createTransaction = async (

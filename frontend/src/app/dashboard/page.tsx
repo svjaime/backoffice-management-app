@@ -2,6 +2,7 @@
 
 import Forbidden from "@/components/forbidden";
 import { CreateTransactionForm } from "@/components/forms/create-transaction-form";
+import TransactionsTable from "@/components/tables/transactions-table";
 import { useAuth } from "@/context/auth-context";
 import { Loader } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -22,6 +23,10 @@ export default function DashboardPage() {
     return <Loader className="animate-spin" />;
   }
 
+  if (!isAuthenticated) {
+    return <Forbidden />;
+  }
+
   if (isAuthenticated && user?.isAdmin) {
     return (
       <div className="flex w-full flex-col">
@@ -35,5 +40,9 @@ export default function DashboardPage() {
     );
   }
 
-  return <Forbidden />;
+  return (
+    <div className="flex w-full flex-col">
+      <TransactionsTable />
+    </div>
+  );
 }

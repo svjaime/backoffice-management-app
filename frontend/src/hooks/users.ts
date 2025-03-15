@@ -34,6 +34,7 @@ export function useGetUsers() {
       }
     },
     enabled: !!token && user?.isAdmin,
+    staleTime: 1000 * 60, // Cache for 1 minute
   });
 }
 

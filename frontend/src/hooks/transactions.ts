@@ -50,6 +50,7 @@ export function useGetTransactions(queryParams: GetTransactionsParams) {
       }
     },
     placeholderData: keepPreviousData,
+    staleTime: 1000 * 60, // Cache for 1 minute
     enabled: !!token,
   });
 }

@@ -197,5 +197,8 @@
     "thisWeekRevenue": "This week's revenue",
     "thisMonthRevenue": "This month's revenue",
     "transactionSubtype": "{subType, select, reward {Reward} purchase {Purchase} refund {Refund} other {other}}"
+  },
+  "BarChart": {
+    "total": "Total"
   }
 }

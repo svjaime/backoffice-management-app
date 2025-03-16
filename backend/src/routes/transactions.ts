@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Hono } from "hono";
 import { describeRoute } from "hono-openapi";
 import { resolver, validator as zValidator } from "hono-openapi/zod";
@@ -10,6 +11,7 @@ import { checkPermission } from "../middlewares/check-permission";
 import { jwtMiddleware } from "../middlewares/jwt";
 import {
   getTransactionsQueryParams,
+  revenueResponseSchema,
   transactionInputSchema,
   transactionResponseSchema,
 } from "../utils/schemas";
@@ -110,6 +112,55 @@ app.post(
     const newTransaction = await prisma.transaction.create({ data: inputData });
 
     return c.json(transactionResponseSchema.parse(newTransaction));
+  }
+);
+
+app.get(
+  "/revenue",
+  describeRoute({
+    description: "Get revenue for current week and month",
+    responses: {
+      200: {
+        description: "Successful response",
+        content: {
+          "text/plain": { schema: resolver(revenueResponseSchema) },
+        },
+      },
+    },
+  }),
+  checkPermission("view_transactions"),
+  async (c) => {
+    const startOfWeek = dayjs().startOf("week").toDate();
+    const startOfMonth = dayjs().startOf("month").toDate();
+
+    const prisma = await prismaClient.fetch(c.env.DB);
+
+    const weeklyRevenuePromise = prisma.transaction.groupBy({
+      by: ["subType"],
+      _sum: { amount: true },
+      where: {
+        createdAt: { gte: startOfWeek },
+        status: "completed",
+      },
+    });
+
+    const monthlyRevenuePromise = prisma.transaction.groupBy({
+      by: ["subType"],
+      _sum: { amount: true },
+      where: {
+        createdAt: { gte: startOfMonth },
+        status: "completed",
+      },
+    });
+
+    const [weeklyRevenue, monthlyRevenue] = await Promise.all([
+      weeklyRevenuePromise,
+      monthlyRevenuePromise,
+    ]);
+
+    return c.json(
+      revenueResponseSchema.parse({ weeklyRevenue, monthlyRevenue })
+    );
   }
 );
 

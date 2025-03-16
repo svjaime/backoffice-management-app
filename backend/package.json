@@ -10,6 +10,7 @@
     "@prisma/client": "^6.5.0",
     "@scalar/hono-api-reference": "^0.6.0",
     "add": "^2.0.6",
+    "dayjs": "^1.11.13",
     "hono": "^4.7.4",
     "hono-openapi": "^0.4.6",
     "zod": "^3.24.2",

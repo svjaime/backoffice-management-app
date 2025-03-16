@@ -126,3 +126,22 @@ export const transactionResponseSchema = z.object({
   userId: userIdSchema,
   createdAt: createdAtSchema,
 });
+
+export const revenueResponseSchema = z.object({
+  weeklyRevenue: z.array(
+    z.object({
+      subType: transactionSubTypeSchema,
+      _sum: z.object({
+        amount: z.number().nonnegative().finite(),
+      }),
+    })
+  ),
+  monthlyRevenue: z.array(
+    z.object({
+      subType: transactionSubTypeSchema,
+      _sum: z.object({
+        amount: z.number().nonnegative().finite(),
+      }),
+    })
+  ),
+});

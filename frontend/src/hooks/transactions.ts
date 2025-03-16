@@ -11,10 +11,16 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { z } from "zod";
 
+export const transactionSubTypeSchema = z.enum([
+  "reward",
+  "purchase",
+  "refund",
+]);
+
 export const transactionSchema = z.object({
   id: z.number(),
   type: z.enum(["deposit", "credit"]),
-  subType: z.enum(["reward", "purchase", "refund"]),
+  subType: transactionSubTypeSchema,
   amount: z.number(),
   status: z.enum(["pending", "failed", "completed"]),
   description: z.string().optional(),

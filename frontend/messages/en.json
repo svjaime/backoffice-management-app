@@ -189,5 +189,13 @@
   "UserRoleBadge": {
     "admin": "Admin",
     "user": "User"
+  },
+  "RevenueBreakdown": {
+    "revenueBreakdown": "Revenue breakdown",
+    "error": "Error",
+    "failedToLoadData": "Failed to load data",
+    "thisWeekRevenue": "This week's revenue",
+    "thisMonthRevenue": "This month's revenue",
+    "transactionSubtype": "{subType, select, reward {Reward} purchase {Purchase} refund {Refund} other {other}}"
   }
 }

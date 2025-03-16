@@ -1,5 +1,6 @@
 "use client";
 
+import RevenueBreakdown from "@/components/charts/revenue-breakdown";
 import Forbidden from "@/components/forbidden";
 import { CreateTransactionForm } from "@/components/forms/create-transaction-form";
 import TransactionsTable from "@/components/tables/transactions-table";
@@ -41,7 +42,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col gap-4">
+      <RevenueBreakdown />
       <TransactionsTable />
     </div>
   );

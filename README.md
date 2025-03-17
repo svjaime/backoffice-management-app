@@ -48,7 +48,7 @@ This will set up the database with test users:
 
 > Note: These are also available in the live environment
 
-### 5. Start the App
+### 4. Start the App
 
 ```bash
 # Start backend

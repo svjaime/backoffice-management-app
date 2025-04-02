@@ -4,9 +4,9 @@ A full-stack system built with **Next.js on Vercel (frontend)** and **Hono on Cl
 
 ## Live URLs
 
-- **Frontend:** [https://bma-project-fe.vercel.app/](https://bma-project-fe.vercel.app/)
-- **Backend API:** [https://backend.jaime-verde.workers.dev/](https://backend.jaime-verde.workers.dev/)
-- **API Docs:** [https://backend.jaime-verde.workers.dev/docs](https://backend.jaime-verde.workers.dev/docs)
+~~- **Frontend:** [https://bma-project-fe.vercel.app/](https://bma-project-fe.vercel.app/)~~
+~~- **Backend API:** [https://backend.jaime-verde.workers.dev/](https://backend.jaime-verde.workers.dev/)~~
+~~- **API Docs:** [https://backend.jaime-verde.workers.dev/docs](https://backend.jaime-verde.workers.dev/docs)~~
 
 ---
 
@@ -38,7 +38,7 @@ echo 'NEXT_PUBLIC_API_BASE_URL=http://localhost:8787' > frontend/.env.local
 
 ```bash
 cd backend
-npx wrangler d1 migrations apply spinanda-db --local
+npx wrangler d1 migrations apply db-name --local
 ```
 
 This will set up the database with test users:
@@ -53,7 +53,7 @@ This will set up the database with test users:
 ```bash
 # Start backend
 cd backend
-npm run dev  # Runs on http://localhost:8787
+npm run dev  # Runs on http://localhost:8787 (API Docs available on http://localhost:8787/docs)
 
 # Start frontend
 cd frontend

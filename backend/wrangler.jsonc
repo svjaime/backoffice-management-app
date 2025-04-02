@@ -24,8 +24,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "spinanda-db",
-      "database_id": "7cce6899-48ff-4832-bc52-bab99d454c26"
+      "database_name": "db-name",
+      "database_id": "db-uuid"
     }
   ],
   // "ai": {

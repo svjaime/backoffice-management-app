@@ -23,7 +23,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "svjaime - spinanda test",
+  title: "svjaime - POC",
   description: "A backoffice management app",
 };
 

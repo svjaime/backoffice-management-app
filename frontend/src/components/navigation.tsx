@@ -17,9 +17,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
+import { Loader, Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import en from "../../messages/en.json";
 
 const navItems: {
@@ -32,6 +34,22 @@ const navItems: {
 
 export default function Navigation() {
   const t = useTranslations("Navigation");
+  const { user, isLoading } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setIsAuthenticated(!!user);
+    }
+  }, [isLoading, user]);
+
+  if (isLoading) {
+    return <Loader className="animate-spin" />;
+  }
+
+  if (!isAuthenticated) {
+    return <></>;
+  }
 
   return (
     <div>

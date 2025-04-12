@@ -4,9 +4,9 @@ A full-stack system built with **Next.js on Vercel (frontend)** and **Hono on Cl
 
 ## Live URLs
 
-~~- **Frontend:** [https://bma-project-fe.vercel.app/](https://bma-project-fe.vercel.app/)~~
-~~- **Backend API:** [https://backend.jaime-verde.workers.dev/](https://backend.jaime-verde.workers.dev/)~~
-~~- **API Docs:** [https://backend.jaime-verde.workers.dev/docs](https://backend.jaime-verde.workers.dev/docs)~~
+- **Frontend:** [https://bma-frontend.vercel.app/](https://bma-frontend.vercel.app/)
+- **Backend API:** [https://bma-backend.jaime-verde.workers.dev/](https://bma-backend.jaime-verde.workers.dev/)
+- **API Docs:** [https://bma-backend.jaime-verde.workers.dev/docs](https://bma-backend.jaime-verde.workers.dev/docs)
 
 ---
 
@@ -38,7 +38,7 @@ echo 'NEXT_PUBLIC_API_BASE_URL=http://localhost:8787' > frontend/.env.local
 
 ```bash
 cd backend
-npx wrangler d1 migrations apply db-name --local
+npx wrangler d1 migrations apply bma-db --local
 ```
 
 This will set up the database with test users:

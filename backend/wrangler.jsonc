@@ -24,8 +24,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "db-name",
-      "database_id": "db-uuid"
+      "database_name": "bma-db",
+      "database_id": "4e1fe79c-ac44-4861-924a-1053dc3e4eb1"
     }
   ],
   // "ai": {

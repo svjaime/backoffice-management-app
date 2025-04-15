@@ -3,9 +3,7 @@
   "name": "bma-backend",
   "main": "src/index.ts",
   "compatibility_date": "2025-03-09",
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
+  "compatibility_flags": ["nodejs_compat"],
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },

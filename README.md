@@ -2,12 +2,6 @@
 
 A full-stack system built with **Next.js on Vercel (frontend)** and **Hono on Cloudflare Workers (backend)**.
 
-## Live URLs
-
-- **Frontend:** [https://bma-frontend.vercel.app/](https://bma-frontend.vercel.app/)
-- **Backend API:** [https://bma-backend.jaime-verde.workers.dev/](https://bma-backend.jaime-verde.workers.dev/)
-- **API Docs:** [https://bma-backend.jaime-verde.workers.dev/docs](https://bma-backend.jaime-verde.workers.dev/docs)
-
 ---
 
 ## Local Setup Instructions
